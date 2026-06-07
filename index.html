@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary 2045 — Projection</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #111118;
+    --border: #1e1e2e;
+    --gold: #c9a84c;
+    --gold-dim: #7a6030;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text: #e8e8f0;
+    --muted: #5a5a7a;
+    --accent: #c9a84c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    padding: 32px 20px;
+    background-image: 
+      radial-gradient(ellipse at 20% 0%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 72px);
+    letter-spacing: 6px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold-dim);
+    margin: 16px auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 780px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  .panel-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: #0d0d14;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="number"]:focus {
+    border-color: var(--gold-dim);
+  }
+
+  .unit {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+    letter-spacing: 1px;
+  }
+
+  .fixed-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #16161f;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+  }
+
+  .fixed-row:last-child { border-bottom: none; }
+  .fixed-row .k { color: var(--muted); }
+  .fixed-row .v { color: var(--text); font-weight: 600; }
+
+  /* Results */
+  .result-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat {
+    background: #0d0d14;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .stat.highlight {
+    border-color: var(--gold-dim);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+
+  .stat-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  th {
+    background: #0d0d14;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 7px 10px;
+    text-align: right;
+    border-bottom: 1px solid #13131a;
+    color: #9090b0;
+  }
+
+  td:first-child { text-align: left; color: var(--muted); }
+
+  tr:last-child td { color: var(--gold); font-weight: 600; border-bottom: none; }
+
+  tr.milestone td { color: var(--text); }
+  tr.milestone td:first-child { color: var(--gold-dim); }
+
+  .goal-reached td { color: var(--green) !important; }
+  .goal-reached td:first-child { color: var(--green) !important; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(46,204,113,0.1);
+    border: 1px solid rgba(46,204,113,0.3);
+    color: var(--green);
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .note span { color: var(--gold-dim); }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin: 16px 0;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: #1a1a28;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* Inflation toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .toggle-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .toggle-switch input { display: none; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: #1a1a28;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .toggle-switch input:checked ~ .toggle-track {
+    background: rgba(201,168,76,0.15);
+    border-color: var(--gold-dim);
+  }
+
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    background: var(--muted);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .toggle-switch input:checked ~ .toggle-track .toggle-knob {
+    transform: translateX(20px);
+    background: var(--gold);
+  }
+
+  .inflation-sub {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .inflation-sub.active {
+    max-height: 80px;
+    opacity: 1;
+  }
+
+  .real-col { color: #7a9fbf !important; }
+  .real-col-header { color: #4a7090 !important; }
+
+  th.real { color: #4a7090 !important; }
+  td.real { color: #7a9fbf !important; }
+  .goal-reached td.real { color: #5fbf8f !important; }
+
+  .stat.inflation-stat {
+    border-color: #2a4a60;
+    background: rgba(70,130,180,0.04);
+  }
+
+  .stat.inflation-stat .stat-value { color: #7ab8d8; }
+
+  .infl-badge {
+    display: inline-block;
+    background: rgba(70,130,180,0.12);
+    border: 1px solid rgba(70,130,180,0.3);
+    color: #7ab8d8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SALARY 2045</h1>
+  <div class="subtitle">Dividend Freedom Projection</div>
+  <div class="divider"></div>
+</header>
+
+<div class="grid">
+
+  <!-- LEFT: Inputs -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">// Variables</div>
+
+      <div class="field">
+        <label>Monthly Contribution ($)</label>
+        <input type="number" id="monthly" value="500" min="0" step="50">
+        <div class="unit">USD / month added to portfolio</div>
+      </div>
+
+      <div class="field">
+        <label>Current Portfolio Value ($)</label>
+        <input type="number" id="portfolio" value="7460" min="0" step="100">
+      </div>
+
+      <div class="field">
+        <label>Current Dividend Yield (%)</label>
+        <input type="number" id="yield" value="1.84" min="0" step="0.1">
+      </div>
+
+      <div class="field">
+        <label>Dividend CAGR (%/yr)</label>
+        <input type="number" id="divcagr" value="9" min="0" step="0.5">
+      </div>
+
+      <div class="field">
+        <label>Price Appreciation (%/yr)</label>
+        <input type="number" id="pricegrowth" value="8" min="0" step="0.5">
+      </div>
+
+      <div class="field">
+        <label>Target Net Monthly ($)</label>
+        <input type="number" id="target" value="2000" min="0" step="100">
+      </div>
+
+      <div class="field">
+        <label>Dividend Tax Rate (%)</label>
+        <input type="number" id="taxrate" value="25" min="0" max="60" step="1">
+        <div class="unit">withheld on gross dividends</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="field">
+          <label>Start Year</label>
+          <input type="number" id="startyear" value="2026" min="2020" max="2060" step="1">
+        </div>
+        <div class="field">
+          <label>Target Year</label>
+          <input type="number" id="endyear" value="2045" min="2025" max="2080" step="1">
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); margin-top: 8px; padding-top: 16px;">
+        <div class="toggle-row">
+          <span class="toggle-label">Inflation Adjustment</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="inflation-toggle">
+            <div class="toggle-track">
+              <div class="toggle-knob"></div>
+            </div>
+          </label>
+        </div>
+        <div class="inflation-sub" id="inflation-sub">
+          <div class="field" style="margin-bottom:4px;">
+            <label>Annual Inflation Rate (%)</label>
+            <input type="number" id="inflation" value="3" min="0" max="20" step="0.5">
+            <div class="unit">net/mo shown in today's purchasing power</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:14px;">
+      <div class="panel-title">// Fixed Assumptions</div>
+      <div class="fixed-row"><span class="k">TAX RATE</span><span class="v" id="tax-label">25%</span></div>
+      <div class="fixed-row"><span class="k">HORIZON</span><span class="v" id="horizon-label">2026 → 2045</span></div>
+      <div class="fixed-row"><span class="k">YEARS</span><span class="v" id="years-label">19 yrs</span></div>
+      <div class="fixed-row"><span class="k">DRIP</span><span class="v">Yes (until target year)</span></div>
+      <div class="fixed-row"><span class="k">INFLATION ADJ.</span><span class="v" id="infl-status">Not applied</span></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div>
+    <div class="panel" id="results-panel">
+      <div class="panel-title">// Projection Output</div>
+
+      <div class="result-block">
+        <div class="stat highlight">
+          <div class="stat-label">Required Monthly</div>
+          <div class="stat-value" id="out-monthly">—</div>
+          <div class="stat-sub" id="out-monthly-sub">to hit target by 2045</div>
+        </div>
+        <div class="stat highlight">
+          <div class="stat-label">Portfolio in <span id="label-endyear">2045</span></div>
+          <div class="stat-value" id="out-portfolio">—</div>
+          <div class="stat-sub">projected value</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Annual Div (Gross)</div>
+          <div class="stat-value" id="out-gross">—</div>
+          <div class="stat-sub">before <span id="tax-gross-label">25%</span> tax</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Monthly Net (Nominal)</div>
+          <div class="stat-value green" id="out-net">—</div>
+          <div class="stat-sub">after <span id="tax-net-label">25%</span> tax</div>
+        </div>
+        <div class="stat inflation-stat" id="real-stat" style="display:none; grid-column: 1 / -1;">
+          <div class="stat-label">Monthly Net <span class="infl-badge">REAL</span></div>
+          <div class="stat-value" id="out-real">—</div>
+          <div class="stat-sub" id="out-real-sub">in today's purchasing power</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Current</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" style="margin-top:4px;">
+          <span id="current-net-label">Now: $0/mo net</span>
+          <span>Goal: $<span id="goal-label">2,000</span>/mo net</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Portfolio $</th>
+              <th>Div Yield %</th>
+              <th>Annual Div</th>
+              <th>Net/Mo</th>
+              <th class="real" id="th-real" style="display:none;">Real/Mo</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="note-block"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function fmt(n, dec=0) {
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + n.toLocaleString('en-US', {maximumFractionDigits: dec});
+  return '$' + n.toFixed(dec);
+}
+
+function fmtPct(n) { return n.toFixed(2) + '%'; }
+
+function simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, monthly, YEARS, startYear, inflation, TAX) {
+  let portValue = portStart;
+  let divYield = yieldStart;
+  let rows = [];
+  let goalYear = null;
+  for (let y = 1; y <= YEARS; y++) {
+    const contribAnnual = monthly * 12;
+    const avgPort = portValue + contribAnnual * 0.5;
+    const divGross = avgPort * divYield;
+    const divNet = divGross * (1 - TAX);
+    portValue = portValue * (1 + priceGrow) + contribAnnual + divNet;
+    divYield = Math.min(divYield * (1 + divCAGR), 0.15);
+    const netMonthly = divNet / 12;
+    // Real = deflated by cumulative inflation
+    const inflFactor = Math.pow(1 + inflation, y);
+    const realMonthly = netMonthly / inflFactor;
+    const isGoal = netMonthly >= targetNet && !goalYear;
+    if (isGoal) goalYear = startYear + y - 1;
+    rows.push({ year: startYear + y - 1, portValue, divYield: divYield * 100, divGross, netMonthly, realMonthly, isGoal });
+  }
+  return rows;
+}
+
+function calc() {
+  const monthly      = parseFloat(document.getElementById('monthly').value) || 0;
+  const portStart    = parseFloat(document.getElementById('portfolio').value) || 7460;
+  const yieldStart   = parseFloat(document.getElementById('yield').value) / 100 || 0.0184;
+  const divCAGR      = parseFloat(document.getElementById('divcagr').value) / 100 || 0.09;
+  const priceGrow    = parseFloat(document.getElementById('pricegrowth').value) / 100 || 0.08;
+  const targetNet    = parseFloat(document.getElementById('target').value) || 2000;
+  let   startYear    = parseInt(document.getElementById('startyear').value) || 2026;
+  let   endYear      = parseInt(document.getElementById('endyear').value) || 2045;
+  const inflEnabled  = document.getElementById('inflation-toggle').checked;
+  const inflRate     = inflEnabled ? (parseFloat(document.getElementById('inflation').value) / 100 || 0.03) : 0;
+  const TAX          = (parseFloat(document.getElementById('taxrate').value) || 25) / 100;
+
+  if (endYear <= startYear) endYear = startYear + 1;
+  const YEARS = endYear - startYear;
+
+  document.getElementById('horizon-label').textContent = `${startYear} → ${endYear}`;
+  document.getElementById('years-label').textContent = `${YEARS} yrs`;
+  document.getElementById('label-endyear').textContent = endYear;
+  document.getElementById('tax-label').textContent = `${(TAX*100).toFixed(0)}%`;
+  document.getElementById('infl-status').textContent = inflEnabled
+    ? `${(inflRate*100).toFixed(1)}%/yr applied`
+    : 'Not applied';
+  document.getElementById('infl-status').style.color = inflEnabled ? '#7ab8d8' : '';
+
+  const rows = simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, monthly, YEARS, startYear, inflRate, TAX);
+
+  // Binary search for required monthly
+  let lo = 0, hi = 50000;
+  for (let iter = 0; iter < 60; iter++) {
+    const mid = (lo + hi) / 2;
+    const r = simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, mid, YEARS, startYear, inflRate, TAX);
+    if (r[r.length-1].netMonthly >= targetNet) hi = mid;
+    else lo = mid;
+  }
+  const reqMonthly = (lo + hi) / 2;
+
+  const lastRow = rows[rows.length - 1];
+  const currentNetMonthly = portStart * yieldStart * (1 - TAX) / 12;
+
+  document.getElementById('out-monthly').textContent = fmt(reqMonthly);
+  document.getElementById('out-portfolio').textContent = fmt(lastRow.portValue);
+  document.getElementById('out-gross').textContent = fmt(lastRow.divGross);
+  document.getElementById('out-net').textContent = fmt(lastRow.netMonthly) + '/mo';
+  document.getElementById('tax-gross-label').textContent = `${(TAX*100).toFixed(0)}%`;
+  document.getElementById('tax-net-label').textContent = `${(TAX*100).toFixed(0)}%`;
+
+  // Inflation stat card
+  const realStat = document.getElementById('real-stat');
+  const thReal   = document.getElementById('th-real');
+  if (inflEnabled) {
+    realStat.style.display = '';
+    thReal.style.display   = '';
+    document.getElementById('out-real').textContent = fmt(lastRow.realMonthly) + '/mo';
+    document.getElementById('out-real-sub').textContent =
+      `in ${startYear} purchasing power (${(inflRate*100).toFixed(1)}%/yr inflation over ${YEARS} yrs)`;
+  } else {
+    realStat.style.display = 'none';
+    thReal.style.display   = 'none';
+  }
+
+  const pct = Math.min(100, (currentNetMonthly / targetNet) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct.toFixed(1) + '%';
+  document.getElementById('current-net-label').textContent = 'Now: ' + fmt(currentNetMonthly) + '/mo net';
+  document.getElementById('goal-label').textContent = targetNet.toLocaleString();
+
+  // Smart row selection
+  const showSet = new Set();
+  showSet.add(0); showSet.add(1); showSet.add(2);
+  showSet.add(YEARS-1); showSet.add(YEARS-2); showSet.add(YEARS-3);
+  const step = Math.max(1, Math.floor(YEARS / 6));
+  for (let i = step; i < YEARS - step; i += step) showSet.add(i);
+  rows.forEach((r, i) => { if (r.isGoal) showSet.add(i); });
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  rows.forEach((r, i) => {
+    if (!showSet.has(i)) return;
+    const tr = document.createElement('tr');
+    if (r.netMonthly >= targetNet) tr.classList.add('goal-reached');
+    const badge = r.isGoal ? '<span class="badge">GOAL</span>' : '';
+    const realCell = inflEnabled
+      ? `<td class="real">${fmt(r.realMonthly)}/mo</td>`
+      : '';
+    tr.innerHTML = `
+      <td>${r.year}${badge}</td>
+      <td>${fmt(r.portValue)}</td>
+      <td>${fmtPct(r.divYield)}</td>
+      <td>${fmt(r.divGross)}</td>
+      <td>${fmt(r.netMonthly)}/mo</td>
+      ${realCell}
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const netFinal = lastRow.netMonthly;
+  const surplus  = netFinal - targetNet;
+  const noteEl   = document.getElementById('note-block');
+  let noteText   = `<span>// KEY INSIGHT</span><br>`;
+  if (netFinal >= targetNet) {
+    noteText += `With $${Math.round(monthly)}/mo, portfolio reaches <span>${fmt(lastRow.portValue)}</span> by ${endYear}, `;
+    noteText += `generating <span>${fmt(netFinal)}/mo net</span> — `;
+    noteText += surplus > 0 ? `<span>${fmt(surplus)}/mo above target</span>.<br>` : `exactly at target.<br>`;
+  } else {
+    noteText += `With $${Math.round(monthly)}/mo, portfolio falls short by ${endYear} at <span>${fmt(netFinal)}/mo net</span>.<br>`;
+    noteText += `Required monthly to hit target: <span>${fmt(reqMonthly)}</span>.<br>`;
+  }
+  if (inflEnabled) {
+    noteText += `Real purchasing power of that income in ${startYear} dollars: <span>${fmt(lastRow.realMonthly)}/mo</span> (deflated at ${(inflRate*100).toFixed(1)}%/yr).<br>`;
+  }
+  noteText += `<br><span>// ASSUMPTIONS</span><br>`;
+  noteText += `Div CAGR ${(divCAGR*100).toFixed(1)}% compounds yield from ${fmtPct(yieldStart*100)} → ~${fmtPct(Math.min(yieldStart * Math.pow(1+divCAGR, YEARS) * 100, 15))} by ${endYear}. `;
+  noteText += `Price grows ${(priceGrow*100).toFixed(0)}%/yr. Net dividends reinvested (DRIP). Tax ${(TAX*100).toFixed(0)}%. `;
+  noteText += inflEnabled
+    ? `Inflation ${(inflRate*100).toFixed(1)}%/yr — Real/Mo column shows ${startYear} purchasing power.`
+    : `No inflation adjustment.`;
+  noteEl.innerHTML = noteText;
+}
+
+// Inflation toggle handler
+document.getElementById('inflation-toggle').addEventListener('change', function() {
+  const sub = document.getElementById('inflation-sub');
+  sub.classList.toggle('active', this.checked);
+  calc();
+});
+
+// Auto-recalc on input change
+document.querySelectorAll('input').forEach(el => {
+  el.addEventListener('input', calc);
+});
+
+calc();
+</script>
+</body>
+</html>
