@@ -5,7 +5,7 @@
 
 ---
 
-![Salary 2045 Demo](Recording2026-06-07131335-ezgif_com-video-to-gif-converter.gif)
+![Salary 2045 Demo](Demo.gif)
 
 ---
 
