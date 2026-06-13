@@ -1,4 +1,4 @@
-# Salary 2045 — Dividend Freedom Projection
+# Salary 2045 — Dividend portfolio Projection
 
 🔗 [Live Demo Salary2045 Dividend Calculator](https://gavrielp1.github.io/Salary2045-Dividend-Freedom-Calculator/)
 
