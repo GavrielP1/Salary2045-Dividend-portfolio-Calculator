@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary 2045 — Projection</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a0d1a'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='20' font-family='serif' fill='%234a7fc1'>S</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c18;
+    --panel: #0d1120;
+    --border: #1a2035;
+    --navy: #2a5298;
+    --navy-dim: #1a3560;
+    --navy-bright: #4a7fc1;
+    --navy-glow: #5b8fd1;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text: #c8dff0;
+    --muted: #5b8fd1;
+    --accent: #4a7fc1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 32px 20px;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(42,82,152,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(74,127,193,0.07) 0%, transparent 60%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 8vw, 72px);
+    letter-spacing: 2px;
+    color: var(--navy-bright);
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 8px;
+    font-weight: 300;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--navy-dim);
+    margin: 16px auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 780px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--panel);
+    border: none;
+    border-radius: 6px;
+    padding: 24px;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(42,82,152,0.2);
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 6px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(74,127,193,0.35) 0%, rgba(42,82,152,0.15) 50%, rgba(74,127,193,0.08) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    transition: background 0.4s ease;
+  }
+
+  .panel:hover::before {
+    background: linear-gradient(135deg, rgba(91,143,209,0.6) 0%, rgba(74,127,193,0.3) 50%, rgba(42,82,152,0.2) 100%);
+  }
+
+  .panel-title {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .panel-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--navy-bright);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .panel-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.2px;
+    line-height: 1.1;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: #080c18;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, transform 0.18s ease;
+  }
+
+  input[type="number"]:hover:not(:focus) {
+    border-color: #252d45;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(42,82,152,0.15);
+  }
+
+  input[type="number"]:focus {
+    border-color: var(--navy-dim);
+    box-shadow: 0 0 0 3px rgba(42,82,152,0.18);
+    background: #0a0f1e;
+  }
+
+  .unit {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 3px;
+    letter-spacing: 1px;
+  }
+
+  .fixed-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #111827;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    transition: transform 0.2s ease, background 0.2s ease;
+    border-radius: 3px;
+    cursor: default;
+  }
+
+  .fixed-row:hover {
+    transform: translateY(-2px);
+    background: rgba(42,82,152,0.06);
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .fixed-row:last-child { border-bottom: none; }
+  .fixed-row .k { color: var(--muted); }
+  .fixed-row .v { color: var(--text); font-weight: 600; }
+
+  /* Results */
+  .result-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat {
+    background: #080c18;
+    border: none;
+    border-radius: 5px;
+    padding: 16px;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+  }
+
+  .stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(42,82,152,0.2);
+  }
+
+  .stat::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 5px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(42,82,152,0.25) 0%, rgba(74,127,193,0.08) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .stat.highlight::before {
+    background: linear-gradient(135deg, rgba(74,127,193,0.5) 0%, rgba(42,82,152,0.2) 100%);
+  }
+
+  .stat.highlight {
+    background: rgba(42,82,152,0.06);
+  }
+
+  .stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+
+  .stat-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+  }
+
+  th {
+    background: #080c18;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 7px 10px;
+    text-align: right;
+    border-bottom: 1px solid #0e1322;
+    color: #4a7fc1;
+  }
+
+  td:first-child { text-align: left; color: var(--muted); }
+
+  tr:last-child td { color: var(--text); font-weight: 600; border-bottom: none; }
+
+  tbody tr {
+    transition: background 0.15s ease;
+    cursor: default;
+  }
+
+  tbody tr:hover td { color: #a8c8e8 !important; }
+  tbody tr:hover { background: rgba(74,127,193,0.1); }
+  tbody tr.goal-reached:hover td { color: #5fd88f !important; }
+
+  tr.milestone td { color: var(--text); }
+  tr.milestone td:first-child { color: var(--navy-dim); }
+
+  .goal-reached td { color: var(--green) !important; }
+  .goal-reached td:first-child { color: var(--green) !important; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(46,204,113,0.1);
+    border: 1px solid rgba(46,204,113,0.3);
+    color: var(--green);
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .note {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: #5b8fd1;
+    line-height: 1.7;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .note span { color: var(--navy-glow); }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin: 16px 0;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: #111827;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy-dim), var(--navy-bright));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* Inflation toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .toggle-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--text);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .toggle-switch input { display: none; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: #111827;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .toggle-switch input:checked ~ .toggle-track {
+    background: rgba(42,82,152,0.2);
+    border-color: var(--navy-dim);
+  }
+
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    background: var(--muted);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .toggle-switch input:checked ~ .toggle-track .toggle-knob {
+    transform: translateX(20px);
+    background: var(--navy-bright);
+  }
+
+  .inflation-sub {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .inflation-sub.active {
+    max-height: 80px;
+    opacity: 1;
+  }
+
+  .real-col { color: #7a9fbf !important; }
+  .real-col-header { color: #4a7090 !important; }
+
+  th.real { color: #4a7090 !important; }
+  td.real { color: #7a9fbf !important; }
+  .goal-reached td.real { color: #5fbf8f !important; }
+
+  .stat.inflation-stat {
+    border-color: #2a4a60;
+    background: rgba(42,82,152,0.05);
+  }
+
+  .stat.inflation-stat .stat-value { color: #7ab8d8; }
+
+  .infl-badge {
+    display: inline-block;
+    background: rgba(42,82,152,0.2);
+    border: 1px solid rgba(74,127,193,0.3);
+    color: var(--navy-bright);
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+
+  .breakdown-panel {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .breakdown-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .breakdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .breakdown-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .breakdown-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .breakdown-pct {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    margin-left: 5px;
+  }
+
+  .breakdown-bar-bg {
+    height: 4px;
+    background: #111827;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .breakdown-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  .bar-contrib { background: linear-gradient(90deg, #1a3560, #2a5298); }
+  .bar-drip    { background: linear-gradient(90deg, #2a5298, #4a7fc1); }
+  .bar-growth  { background: linear-gradient(90deg, #4a7fc1, #7ab0d8); }
+
+  .breakdown-total {
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .breakdown-total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .breakdown-total-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--navy-bright);
+  }
+
+
+  #particles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    align-items: stretch;
+  }
+
+  .export-btn, .share-btn, .print-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 18px;
+    background: transparent;
+    border: 1px solid var(--navy-dim);
+    border-radius: 999px;
+    color: var(--navy-bright);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .export-btn:hover, .share-btn:hover, .print-btn:hover {
+    background: rgba(74,127,193,0.25);
+    border-color: #7ab0d8;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74,127,193,0.28);
+  }
+
+  .export-btn svg, .share-btn svg, .print-btn svg {
+    width: 12px; height: 12px;
+    stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #0d1120;
+    border: 1px solid var(--navy-dim);
+    color: var(--navy-bright);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+
+  @media print {
+    #particles-canvas, .export-btn, .share-btn, .print-btn, footer { display: none !important; }
+    body { background: #fff !important; color: #000 !important; padding: 0; }
+    .panel { border: 1px solid #ccc !important; background: #fff !important; }
+    .stat { background: #f5f5f5 !important; }
+    * { color: #000 !important; box-shadow: none !important; }
+    .panel::before, .stat::before { display: none; }
+  }
+
+
+
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function init() {
+    const count = Math.floor((W * H) / 12000);
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: rand(0.5, 2.2), vx: rand(-0.12, 0.12), vy: rand(-0.18, -0.04),
+      alpha: rand(0.15, 0.55), flicker: rand(0.003, 0.008), phase: Math.random() * Math.PI * 2
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.phase += p.flicker;
+      if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+      if (p.x < -5) p.x = W + 5;
+      if (p.x > W + 5) p.x = -5;
+      const a = p.alpha * (0.6 + 0.4 * Math.sin(p.phase));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(74,127,193,${a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', () => { resize(); init(); });
+  resize(); init(); draw();
+})();
+</script>
+
+<header>
+  <h1>Salary 2045</h1>
+  <div class="subtitle">Dividend Freedom Projection</div>
+  <div class="divider"></div>
+</header>
+
+<div class="grid">
+
+  <!-- LEFT: Inputs -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">
+        <span class="panel-label">Configuration</span>
+        <span class="panel-heading">Variables</span>
+      </div>
+
+      <div class="field">
+        <label>Monthly Contribution ($)</label>
+        <input type="number" id="monthly" value="500" min="0" step="50">
+        <div class="unit">USD / month added to portfolio</div>
+      </div>
+
+      <div class="field">
+        <label>Current Portfolio Value ($)</label>
+        <input type="number" id="portfolio" value="7460" min="0" step="100">
+      </div>
+
+      <div class="field">
+        <label>Current Dividend Yield (%)</label>
+        <input type="number" id="yield" value="1.84" min="0" step="0.1">
+      </div>
+
+      <div class="field">
+        <label>Dividend CAGR (%/yr)</label>
+        <input type="number" id="divcagr" value="9" min="0" step="0.5">
+      </div>
+
+      <div class="field">
+        <label>Price Appreciation (%/yr)</label>
+        <input type="number" id="pricegrowth" value="8" min="0" step="0.5">
+      </div>
+
+      <div class="field">
+        <label>Target Net Monthly ($)</label>
+        <input type="number" id="target" value="2000" min="0" step="100">
+      </div>
+
+      <div class="field">
+        <label>Dividend Tax Rate (%)</label>
+        <input type="number" id="taxrate" value="25" min="0" max="60" step="1">
+        <div class="unit">withheld on gross dividends</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="field">
+          <label>Start Year</label>
+          <input type="number" id="startyear" value="2026" min="2020" max="2060" step="1">
+        </div>
+        <div class="field">
+          <label>Target Year</label>
+          <input type="number" id="endyear" value="2045" min="2025" max="2080" step="1">
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border); margin-top: 8px; padding-top: 16px;">
+        <div class="toggle-row">
+          <span class="toggle-label">Inflation Adjustment</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="inflation-toggle">
+            <div class="toggle-track">
+              <div class="toggle-knob"></div>
+            </div>
+          </label>
+        </div>
+        <div class="inflation-sub" id="inflation-sub">
+          <div class="field" style="margin-bottom:4px;">
+            <label>Annual Inflation Rate (%)</label>
+            <input type="number" id="inflation" value="3" min="0" max="20" step="0.5">
+            <div class="unit">net/mo shown in today's purchasing power</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:14px;">
+      <div class="panel-title">
+        <span class="panel-label">Model</span>
+        <span class="panel-heading">Fixed Assumptions</span>
+      </div>
+      <div class="fixed-row"><span class="k">TAX RATE</span><span class="v" id="tax-label">25%</span></div>
+      <div class="fixed-row"><span class="k">HORIZON</span><span class="v" id="horizon-label">2026 → 2045</span></div>
+      <div class="fixed-row"><span class="k">YEARS</span><span class="v" id="years-label">19 yrs</span></div>
+      <div class="fixed-row"><span class="k">DRIP</span><span class="v">Yes (until target year)</span></div>
+      <div class="fixed-row"><span class="k">INFLATION ADJ.</span><span class="v" id="infl-status">Not applied</span></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div>
+    <div class="panel" id="results-panel">
+      <div class="panel-title">
+        <span class="panel-label">Output</span>
+        <span class="panel-heading">Projection Results</span>
+      </div>
+
+      <div class="result-block">
+        <div class="stat highlight">
+          <div class="stat-label">Required Monthly</div>
+          <div class="stat-value" id="out-monthly">—</div>
+          <div class="stat-sub" id="out-monthly-sub">to hit target by 2045</div>
+        </div>
+        <div class="stat highlight">
+          <div class="stat-label">Portfolio in <span id="label-endyear">2045</span></div>
+          <div class="stat-value" id="out-portfolio">—</div>
+          <div class="stat-sub">projected value</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Annual Div (Gross)</div>
+          <div class="stat-value" id="out-gross">—</div>
+          <div class="stat-sub">before <span id="tax-gross-label">25%</span> tax</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Monthly Net (Nominal)</div>
+          <div class="stat-value green" id="out-net">—</div>
+          <div class="stat-sub">after <span id="tax-net-label">25%</span> tax</div>
+        </div>
+        <div class="stat inflation-stat" id="real-stat" style="display:none; grid-column: 1 / -1;">
+          <div class="stat-label">Monthly Net <span class="infl-badge">REAL</span></div>
+          <div class="stat-value" id="out-real">—</div>
+          <div class="stat-sub" id="out-real-sub">in today's purchasing power</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Current</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="progress-label" style="margin-top:4px;">
+          <span id="current-net-label">Now: $0/mo net</span>
+          <span>Goal: $<span id="goal-label">2,000</span>/mo net</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Portfolio $</th>
+              <th>Div Yield %</th>
+              <th>Annual Div</th>
+              <th>Net/Mo</th>
+              <th class="real" id="th-real" style="display:none;">Real/Mo</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="note" id="note-block"></div>
+
+      <div class="btn-row">
+        <button class="export-btn" id="export-btn">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <button class="print-btn" id="print-btn">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
+        <button class="share-btn" id="share-btn">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+      <div class="toast" id="toast">Link copied to clipboard</div>
+
+      <div class="panel" style="margin-top:14px; background:#080c18;">
+        <div class="panel-title">
+          <span class="panel-label">Composition</span>
+          <span class="panel-heading">Portfolio Breakdown</span>
+        </div>
+        <div class="breakdown-panel">
+          <div class="breakdown-item">
+            <div class="breakdown-header">
+              <span class="breakdown-label">Contributions</span>
+              <span><span class="breakdown-value" id="bd-contrib">—</span><span class="breakdown-pct" id="bd-contrib-pct"></span></span>
+            </div>
+            <div class="breakdown-bar-bg"><div class="breakdown-bar-fill bar-contrib" id="bar-contrib" style="width:0%"></div></div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-header">
+              <span class="breakdown-label">DRIP Returns</span>
+              <span><span class="breakdown-value" id="bd-drip">—</span><span class="breakdown-pct" id="bd-drip-pct"></span></span>
+            </div>
+            <div class="breakdown-bar-bg"><div class="breakdown-bar-fill bar-drip" id="bar-drip" style="width:0%"></div></div>
+          </div>
+          <div class="breakdown-item">
+            <div class="breakdown-header">
+              <span class="breakdown-label">Price Growth</span>
+              <span><span class="breakdown-value" id="bd-growth">—</span><span class="breakdown-pct" id="bd-growth-pct"></span></span>
+            </div>
+            <div class="breakdown-bar-bg"><div class="breakdown-bar-fill bar-growth" id="bar-growth" style="width:0%"></div></div>
+          </div>
+          <div class="breakdown-total">
+            <span class="breakdown-total-label">Total Portfolio</span>
+            <span class="breakdown-total-value" id="bd-total">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function fmt(n, dec=0) {
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + n.toLocaleString('en-US', {maximumFractionDigits: dec});
+  return '$' + n.toFixed(dec);
+}
+
+function fmtPct(n) { return n.toFixed(2) + '%'; }
+
+function simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, monthly, YEARS, startYear, inflation, TAX) {
+  let portValue = portStart;
+  let divYield = yieldStart;
+  let rows = [];
+  let goalYear = null;
+  for (let y = 1; y <= YEARS; y++) {
+    const contribAnnual = monthly * 12;
+    const avgPort = portValue + contribAnnual * 0.5;
+    const divGross = avgPort * divYield;
+    const divNet = divGross * (1 - TAX);
+    portValue = portValue * (1 + priceGrow) + contribAnnual + divNet;
+    divYield = Math.min(divYield * (1 + divCAGR), 0.15);
+    const netMonthly = divNet / 12;
+    const inflFactor = Math.pow(1 + inflation, y);
+    const realMonthly = netMonthly / inflFactor;
+    const isGoal = netMonthly >= targetNet && !goalYear;
+    if (isGoal) goalYear = startYear + y - 1;
+    rows.push({ year: startYear + y - 1, portValue, divYield: divYield * 100, divGross, netMonthly, realMonthly, isGoal });
+  }
+  return rows;
+}
+
+function calc() {
+  const monthly      = parseFloat(document.getElementById('monthly').value) || 0;
+  const portStart    = parseFloat(document.getElementById('portfolio').value) || 7460;
+  const yieldStart   = parseFloat(document.getElementById('yield').value) / 100 || 0.0184;
+  const divCAGR      = parseFloat(document.getElementById('divcagr').value) / 100 || 0.09;
+  const priceGrow    = parseFloat(document.getElementById('pricegrowth').value) / 100 || 0.08;
+  const targetNet    = parseFloat(document.getElementById('target').value) || 2000;
+  let   startYear    = parseInt(document.getElementById('startyear').value) || 2026;
+  let   endYear      = parseInt(document.getElementById('endyear').value) || 2045;
+  const inflEnabled  = document.getElementById('inflation-toggle').checked;
+  const inflRate     = inflEnabled ? (parseFloat(document.getElementById('inflation').value) / 100 || 0.03) : 0;
+  const TAX          = (parseFloat(document.getElementById('taxrate').value) || 25) / 100;
+
+  if (endYear <= startYear) endYear = startYear + 1;
+  const YEARS = endYear - startYear;
+
+  document.getElementById('horizon-label').textContent = `${startYear} → ${endYear}`;
+  document.getElementById('years-label').textContent = `${YEARS} yrs`;
+  document.getElementById('label-endyear').textContent = endYear;
+  document.getElementById('tax-label').textContent = `${(TAX*100).toFixed(0)}%`;
+  document.getElementById('infl-status').textContent = inflEnabled
+    ? `${(inflRate*100).toFixed(1)}%/yr applied`
+    : 'Not applied';
+  document.getElementById('infl-status').style.color = inflEnabled ? '#7ab8d8' : '';
+
+  const rows = simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, monthly, YEARS, startYear, inflRate, TAX);
+
+  let lo = 0, hi = 50000;
+  for (let iter = 0; iter < 60; iter++) {
+    const mid = (lo + hi) / 2;
+    const r = simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, mid, YEARS, startYear, inflRate, TAX);
+    if (r[r.length-1].netMonthly >= targetNet) hi = mid;
+    else lo = mid;
+  }
+  const reqMonthly = (lo + hi) / 2;
+
+  const lastRow = rows[rows.length - 1];
+  const currentNetMonthly = portStart * yieldStart * (1 - TAX) / 12;
+
+  document.getElementById('out-monthly').textContent = fmt(reqMonthly);
+  document.getElementById('out-portfolio').textContent = fmt(lastRow.portValue);
+  document.getElementById('out-gross').textContent = fmt(lastRow.divGross);
+  document.getElementById('out-net').textContent = fmt(lastRow.netMonthly) + '/mo';
+  document.getElementById('tax-gross-label').textContent = `${(TAX*100).toFixed(0)}%`;
+  document.getElementById('tax-net-label').textContent = `${(TAX*100).toFixed(0)}%`;
+
+  const realStat = document.getElementById('real-stat');
+  const thReal   = document.getElementById('th-real');
+  if (inflEnabled) {
+    realStat.style.display = '';
+    thReal.style.display   = '';
+    document.getElementById('out-real').textContent = fmt(lastRow.realMonthly) + '/mo';
+    document.getElementById('out-real-sub').textContent =
+      `in ${startYear} purchasing power (${(inflRate*100).toFixed(1)}%/yr inflation over ${YEARS} yrs)`;
+  } else {
+    realStat.style.display = 'none';
+    thReal.style.display   = 'none';
+  }
+
+  const pct = Math.min(100, (currentNetMonthly / targetNet) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct.toFixed(1) + '%';
+  document.getElementById('current-net-label').textContent = 'Now: ' + fmt(currentNetMonthly) + '/mo net';
+  document.getElementById('goal-label').textContent = targetNet.toLocaleString();
+
+  const showSet = new Set();
+  showSet.add(0); showSet.add(1); showSet.add(2);
+  showSet.add(YEARS-1); showSet.add(YEARS-2); showSet.add(YEARS-3);
+  const step = Math.max(1, Math.floor(YEARS / 6));
+  for (let i = step; i < YEARS - step; i += step) showSet.add(i);
+  rows.forEach((r, i) => { if (r.isGoal) showSet.add(i); });
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  rows.forEach((r, i) => {
+    if (!showSet.has(i)) return;
+    const tr = document.createElement('tr');
+    if (r.netMonthly >= targetNet) tr.classList.add('goal-reached');
+    const badge = r.isGoal ? '<span class="badge">GOAL</span>' : '';
+    const realCell = inflEnabled
+      ? `<td class="real">${fmt(r.realMonthly)}/mo</td>`
+      : '';
+    tr.innerHTML = `
+      <td>${r.year}${badge}</td>
+      <td>${fmt(r.portValue)}</td>
+      <td>${fmtPct(r.divYield)}</td>
+      <td>${fmt(r.divGross)}</td>
+      <td>${fmt(r.netMonthly)}/mo</td>
+      ${realCell}
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const netFinal = lastRow.netMonthly;
+  const surplus  = netFinal - targetNet;
+  const noteEl   = document.getElementById('note-block');
+  let noteText   = `<span>// KEY INSIGHT</span><br>`;
+  if (netFinal >= targetNet) {
+    noteText += `With $${Math.round(monthly)}/mo, portfolio reaches <span>${fmt(lastRow.portValue)}</span> by ${endYear}, `;
+    noteText += `generating <span>${fmt(netFinal)}/mo net</span> — `;
+    noteText += surplus > 0 ? `<span>${fmt(surplus)}/mo above target</span>.<br>` : `exactly at target.<br>`;
+  } else {
+    noteText += `With $${Math.round(monthly)}/mo, portfolio falls short by ${endYear} at <span>${fmt(netFinal)}/mo net</span>.<br>`;
+    noteText += `Required monthly to hit target: <span>${fmt(reqMonthly)}</span>.<br>`;
+  }
+  if (inflEnabled) {
+    noteText += `Real purchasing power of that income in ${startYear} dollars: <span>${fmt(lastRow.realMonthly)}/mo</span> (deflated at ${(inflRate*100).toFixed(1)}%/yr).<br>`;
+  }
+  noteText += `<br><span>// ASSUMPTIONS</span><br>`;
+  noteText += `Div CAGR ${(divCAGR*100).toFixed(1)}% compounds yield from ${fmtPct(yieldStart*100)} → ~${fmtPct(Math.min(yieldStart * Math.pow(1+divCAGR, YEARS) * 100, 15))} by ${endYear}. `;
+  noteText += `Price grows ${(priceGrow*100).toFixed(0)}%/yr. Net dividends reinvested (DRIP). Tax ${(TAX*100).toFixed(0)}%. `;
+  noteText += inflEnabled
+    ? `Inflation ${(inflRate*100).toFixed(1)}%/yr — Real/Mo column shows ${startYear} purchasing power.`
+    : `No inflation adjustment.`;
+  noteEl.innerHTML = noteText;
+
+  // Portfolio Breakdown
+  const totalContrib = portStart + (monthly * 12 * YEARS);
+  const totalPort    = lastRow.portValue;
+  let dripSum = 0;
+  rows.forEach(r => { dripSum += r.divGross * (1 - TAX); });
+  const priceGainApprox = Math.max(0, totalPort - totalContrib - dripSum);
+  const safeTotal = Math.max(totalPort, 1);
+  const pContrib = Math.max(0, Math.min(100, totalContrib / safeTotal * 100));
+  const pDrip    = Math.max(0, Math.min(100 - pContrib, dripSum / safeTotal * 100));
+  const pGrowth  = Math.max(0, 100 - pContrib - pDrip);
+
+  document.getElementById('bd-contrib').textContent     = fmt(totalContrib);
+  document.getElementById('bd-drip').textContent        = fmt(dripSum);
+  document.getElementById('bd-growth').textContent      = fmt(priceGainApprox);
+  document.getElementById('bd-total').textContent       = fmt(totalPort);
+  document.getElementById('bd-contrib-pct').textContent = pContrib.toFixed(0) + '%';
+  document.getElementById('bd-drip-pct').textContent    = pDrip.toFixed(0) + '%';
+  document.getElementById('bd-growth-pct').textContent  = pGrowth.toFixed(0) + '%';
+  document.getElementById('bar-contrib').style.width    = pContrib + '%';
+  document.getElementById('bar-drip').style.width       = pDrip + '%';
+  document.getElementById('bar-growth').style.width     = pGrowth + '%';
+
+}
+
+document.getElementById('inflation-toggle').addEventListener('change', function() {
+  const sub = document.getElementById('inflation-sub');
+  sub.classList.toggle('active', this.checked);
+  calc();
+});
+
+document.querySelectorAll('input').forEach(el => {
+  el.addEventListener('input', calc);
+});
+
+calc();
+
+// Export CSV
+document.getElementById('export-btn').addEventListener('click', function() {
+  const monthly     = parseFloat(document.getElementById('monthly').value) || 0;
+  const portStart   = parseFloat(document.getElementById('portfolio').value) || 7460;
+  const yieldStart  = parseFloat(document.getElementById('yield').value) / 100 || 0.0184;
+  const divCAGR     = parseFloat(document.getElementById('divcagr').value) / 100 || 0.09;
+  const priceGrow   = parseFloat(document.getElementById('pricegrowth').value) / 100 || 0.08;
+  const targetNet   = parseFloat(document.getElementById('target').value) || 2000;
+  let   startYear   = parseInt(document.getElementById('startyear').value) || 2026;
+  let   endYear     = parseInt(document.getElementById('endyear').value) || 2045;
+  const inflEnabled = document.getElementById('inflation-toggle').checked;
+  const inflRate    = inflEnabled ? (parseFloat(document.getElementById('inflation').value) / 100 || 0.03) : 0;
+  const TAX         = (parseFloat(document.getElementById('taxrate').value) || 25) / 100;
+  if (endYear <= startYear) endYear = startYear + 1;
+  const YEARS = endYear - startYear;
+  const rows = simulate(portStart, yieldStart, divCAGR, priceGrow, targetNet, monthly, YEARS, startYear, inflRate, TAX);
+  const headers = ['Year','Portfolio ($)','Div Yield (%)','Annual Div ($)','Net/Mo ($)', inflEnabled ? 'Real/Mo ($)' : null].filter(Boolean);
+  const csvRows = [headers.join(',')];
+  rows.forEach(r => {
+    const row = [r.year, r.portValue.toFixed(0), r.divYield.toFixed(2), r.divGross.toFixed(0), r.netMonthly.toFixed(0), inflEnabled ? r.realMonthly.toFixed(0) : null].filter(v => v !== null);
+    csvRows.push(row.join(','));
+  });
+  const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `salary2045_${startYear}-${endYear}.csv`; a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Print
+document.getElementById('print-btn').addEventListener('click', function() {
+  window.print();
+});
+
+// Share
+document.getElementById('share-btn').addEventListener('click', function() {
+  const params = new URLSearchParams({
+    monthly:     document.getElementById('monthly').value,
+    portfolio:   document.getElementById('portfolio').value,
+    yield:       document.getElementById('yield').value,
+    divcagr:     document.getElementById('divcagr').value,
+    pricegrowth: document.getElementById('pricegrowth').value,
+    target:      document.getElementById('target').value,
+    taxrate:     document.getElementById('taxrate').value,
+    startyear:   document.getElementById('startyear').value,
+    endyear:     document.getElementById('endyear').value,
+    inflation:   document.getElementById('inflation').value,
+    inflenabled: document.getElementById('inflation-toggle').checked ? '1' : '0'
+  });
+  const url = window.location.origin + window.location.pathname + '?' + params.toString();
+  navigator.clipboard.writeText(url).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }).catch(() => {
+    prompt('Copy this link:', url);
+  });
+});
+
+// Load from URL params
+(function() {
+  const p = new URLSearchParams(window.location.search);
+  if (!p.has('monthly')) return;
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+  set('monthly', p.get('monthly')); set('portfolio', p.get('portfolio'));
+  set('yield', p.get('yield')); set('divcagr', p.get('divcagr'));
+  set('pricegrowth', p.get('pricegrowth')); set('target', p.get('target'));
+  set('taxrate', p.get('taxrate')); set('startyear', p.get('startyear'));
+  set('endyear', p.get('endyear')); set('inflation', p.get('inflation'));
+  if (p.get('inflenabled') === '1') {
+    document.getElementById('inflation-toggle').checked = true;
+    document.getElementById('inflation-sub').classList.add('active');
+  }
+  calc();
+})();
+</script>
+
+<footer style="text-align:center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #1a2035;">
+  <span style="font-family:'Inter',sans-serif; font-size:10px; color:#4a7fc1; letter-spacing:2px; text-transform:uppercase;">
+    © 2026 · 
+    <a href="https://github.com/GavrielP1" target="_blank"
+       style="color:#4a7fc1; text-decoration:none; transition: color 0.2s;"
+       onmouseover="this.style.color='#7ab0d8'" onmouseout="this.style.color='#4a7fc1'">
+      github.com/GavrielP1
+    </a>
+  </span>
+</footer>
+
+</body>
+</html>
