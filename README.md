@@ -7,7 +7,7 @@
 
 ---
 
-![Salary 2045 Demo](Recording2026-06-14011301-ezgif_com-video-to-gif-converter.gif)
+![Salary 2045 Demo](Recording2026-06-14011301-ezgif.com-video-to-gif-converter.gif)
 
 ---
 
