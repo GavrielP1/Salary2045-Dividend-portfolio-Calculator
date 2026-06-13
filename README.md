@@ -15,7 +15,7 @@
 
 | Full Dashboard | Year-by-Year Breakdown |
 |:-:|:-:|
-| ![Dashboard Overview](Screenshot_2026-06-14_011330.png) | ![Projection Table](Screenshot_2026-06-14_011401.png) |
+| ![Dashboard Overview](Screenshot1.png) | ![Projection Table](Screenshot2.png) |
 
 ---
 
