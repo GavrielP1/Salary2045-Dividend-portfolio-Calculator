@@ -1,6 +1,6 @@
 # Salary 2045 — Dividend Freedom Projection
 
-🔗 [Live Demo](https://gavrielp1.github.io/Salary2045-Dividend-Freedom-Calculator/)
+🔗 [Live Demo Salary2045 Dividend Calculator](https://gavrielp1.github.io/Salary2045-Dividend-Freedom-Calculator/)
 
 > **A personal financial modeling tool for tracking the path to dividend-based income freedom.**  
 > Built for long-term investors who want a clear, realistic roadmap — with inflation-adjusted math included.
